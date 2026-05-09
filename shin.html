@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillStrive - Learning Progress Tracker</title>
+
+  <link rel="stylesheet" href="shin.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+
+  <div class="background-glow"></div>
+
+  <header class="hero">
+    <h1>SkillStrive 🚀</h1>
+    <p>
+      Track your learning journey and stay motivated on your path to mastery.
+    </p>
+  </header>
+
+  <main class="container">
+
+    <!-- CREATE SKILL -->
+    <section class="card">
+      <h2>Create a New Skill</h2>
+
+      <form id="skillForm">
+        <div class="form-group">
+          <label>Skill Name</label>
+          <input
+            type="text"
+            id="skillName"
+            placeholder="e.g. JavaScript"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Target Hours</label>
+          <input
+            type="number"
+            id="targetHours"
+            placeholder="e.g. 1000"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn">
+          Add Skill
+        </button>
+      </form>
+    </section>
+
+    <!-- SKILL LIST -->
+    <section class="card">
+      <div class="title-row">
+        <h2>Your Progress</h2>
+        <span id="skillCount">0 Skills</span>
+      </div>
+
+      <div id="skillsContainer" class="skills-container">
+        <div class="empty-state">
+          <h3>No skills added yet ✨</h3>
+          <p>Start your first learning journey!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
