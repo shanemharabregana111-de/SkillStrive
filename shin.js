@@ -6,6 +6,7 @@ const skillCount = document.getElementById("skillCount");
 
 let skills = [];
 
+/* RENDER SKILLS */
 function renderSkills() {
 
   skillsContainer.innerHTML = "";
@@ -17,78 +18,95 @@ function renderSkills() {
         <p>Start your first learning journey!</p>
       </div>
     `;
+    updateCount();
+    return;
   }
 
   skills.forEach((skill, index) => {
 
-    const progressPercent =
-      (skill.completedHours / skill.targetHours) * 100;
+    const percent = (skill.completed / skill.target) * 100;
 
-    const skillCard = document.createElement("div");
-    skillCard.classList.add("skill-card");
+    let historyHTML = "";
 
-    skillCard.innerHTML = `
+    if (skill.history.length === 0) {
+      historyHTML = `
+        <li class="history-item">
+          <span>No history yet</span>
+        </li>
+      `;
+    } else {
+      skill.history.forEach(log => {
+        historyHTML += `
+          <li class="history-item">
+            <span>+${log.hours} hrs</span>
+            <small>${log.datetime}</small>
+          </li>
+        `;
+      });
+    }
+
+    const card = document.createElement("div");
+    card.classList.add("skill-card");
+
+    card.innerHTML = `
       <h3>${skill.name}</h3>
 
-      <p>
-        ${skill.completedHours} / ${skill.targetHours} hours
-      </p>
+      <p>${skill.completed} / ${skill.target} hours</p>
 
       <div class="progress-bar">
-        <div
-          class="progress-fill"
-          style="width: ${progressPercent}%"
-        ></div>
+        <div class="progress-fill" style="width:${percent}%"></div>
       </div>
 
       <div class="skill-actions">
 
-        <input
-          type="number"
-          placeholder="Add hours"
-          id="hours-${index}"
-        />
+        <input type="number" id="hours-${index}" placeholder="Add hours"/>
 
-        <button onclick="addHours(${index})">
-          Add Progress
-        </button>
+        <button onclick="addHours(${index})">Add Progress</button>
 
-        <button onclick="deleteSkill(${index})" class="delete-btn">
+        <button class="delete-btn" onclick="deleteSkill(${index})">
           Delete
         </button>
 
       </div>
+
+      <div class="history">
+        <h4>Hours History</h4>
+        <ul class="history-list">
+          ${historyHTML}
+        </ul>
+      </div>
     `;
 
-    skillsContainer.appendChild(skillCard);
+    skillsContainer.appendChild(card);
   });
 
-  updateSkillCount();
+  updateCount();
 }
 
-function updateSkillCount() {
+/* UPDATE COUNT */
+function updateCount() {
   skillCount.textContent =
     `${skills.length} Skill${skills.length !== 1 ? "s" : ""}`;
 }
 
-skillForm.addEventListener("submit", function (e) {
+/* ADD SKILL */
+skillForm.addEventListener("submit", e => {
   e.preventDefault();
 
   const name = skillNameInput.value.trim();
   const target = parseInt(targetHoursInput.value);
 
-  if (name === "" || target <= 0) {
-    alert("Please enter valid data.");
+  if (!name || target <= 0) {
+    alert("Invalid input");
     return;
   }
 
-  const newSkill = {
-    name: name,
-    targetHours: target,
-    completedHours: 0
-  };
-
-  skills.push(newSkill);
+  skills.push({
+    name,
+    target,
+    completed: 0,
+    history: []
+  });
 
   skillNameInput.value = "";
   targetHoursInput.value = "";
@@ -96,32 +114,47 @@ skillForm.addEventListener("submit", function (e) {
   renderSkills();
 });
 
+/* ADD HOURS + HISTORY */
 function addHours(index) {
 
   const input = document.getElementById(`hours-${index}`);
   const hours = parseInt(input.value);
 
   if (isNaN(hours) || hours <= 0) {
-    alert("Enter valid hours.");
+    alert("Enter valid hours");
     return;
   }
 
-  skills[index].completedHours += hours;
+  const skill = skills[index];
 
-  if (
-    skills[index].completedHours >
-    skills[index].targetHours
-  ) {
-    skills[index].completedHours =
-      skills[index].targetHours;
+  skill.completed += hours;
+
+  if (skill.completed > skill.target) {
+    skill.completed = skill.target;
   }
+
+  const now = new Date();
+
+  const datetime =
+    now.toLocaleDateString() +
+    " " +
+    now.toLocaleTimeString();
+
+  skill.history.push({
+    hours,
+    datetime
+  });
+
+  input.value = "";
 
   renderSkills();
 }
 
+/* DELETE SKILL */
 function deleteSkill(index) {
   skills.splice(index, 1);
   renderSkills();
 }
 
+/* INIT */
 renderSkills();
