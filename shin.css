@@ -246,7 +246,6 @@ body {
     flex-direction: column;
   }
 }
-/* ACTIONS */
 .skill-actions {
   display: flex;
   flex-direction: column;
@@ -263,7 +262,6 @@ body {
   color: white;
 }
 
-/* DELETE BUTTON */
 .delete-btn {
   padding: 12px;
   border-radius: 12px;
@@ -275,7 +273,6 @@ body {
   font-weight: 600;
 }
 
-/* HISTORY */
 .history {
   margin-top: 20px;
 }

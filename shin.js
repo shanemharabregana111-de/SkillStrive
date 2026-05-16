@@ -6,7 +6,6 @@ const skillCount = document.getElementById("skillCount");
 
 let skills = [];
 
-/* RENDER SKILLS */
 function renderSkills() {
 
   skillsContainer.innerHTML = "";
@@ -83,13 +82,11 @@ function renderSkills() {
   updateCount();
 }
 
-/* UPDATE COUNT */
 function updateCount() {
   skillCount.textContent =
     `${skills.length} Skill${skills.length !== 1 ? "s" : ""}`;
 }
 
-/* ADD SKILL */
 skillForm.addEventListener("submit", e => {
   e.preventDefault();
 
@@ -114,7 +111,6 @@ skillForm.addEventListener("submit", e => {
   renderSkills();
 });
 
-/* ADD HOURS + HISTORY */
 function addHours(index) {
 
   const input = document.getElementById(`hours-${index}`);
@@ -150,11 +146,10 @@ function addHours(index) {
   renderSkills();
 }
 
-/* DELETE SKILL */
+
 function deleteSkill(index) {
   skills.splice(index, 1);
   renderSkills();
 }
 
-/* INIT */
 renderSkills();
