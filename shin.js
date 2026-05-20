@@ -28,19 +28,24 @@ function renderSkills() {
     let historyHTML = "";
 
     if (skill.history.length === 0) {
+
       historyHTML = `
         <li class="history-item">
           <span>No history yet</span>
         </li>
       `;
+
     } else {
+
       skill.history.forEach(log => {
+
         historyHTML += `
           <li class="history-item">
             <span>+${log.hours} hrs</span>
             <small>${log.datetime}</small>
           </li>
         `;
+
       });
     }
 
@@ -58,9 +63,16 @@ function renderSkills() {
 
       <div class="skill-actions">
 
-        <input type="number" id="hours-${index}" placeholder="Add hours"/>
+        <input 
+          type="number" 
+          step="0.1"
+          id="hours-${index}" 
+          placeholder="Add hours"
+        />
 
-        <button onclick="addHours(${index})">Add Progress</button>
+        <button onclick="addHours(${index})">
+          Add Progress
+        </button>
 
         <button class="delete-btn" onclick="deleteSkill(${index})">
           Delete
@@ -83,17 +95,21 @@ function renderSkills() {
 }
 
 function updateCount() {
+
   skillCount.textContent =
     `${skills.length} Skill${skills.length !== 1 ? "s" : ""}`;
 }
 
 skillForm.addEventListener("submit", e => {
+
   e.preventDefault();
 
   const name = skillNameInput.value.trim();
-  const target = parseInt(targetHoursInput.value);
 
-  if (!name || target <= 0) {
+  // CHANGED parseInt -> parseFloat
+  const target = parseFloat(targetHoursInput.value);
+
+  if (!name || isNaN(target) || target <= 0) {
     alert("Invalid input");
     return;
   }
@@ -114,7 +130,9 @@ skillForm.addEventListener("submit", e => {
 function addHours(index) {
 
   const input = document.getElementById(`hours-${index}`);
-  const hours = parseInt(input.value);
+
+  // CHANGED parseInt -> parseFloat
+  const hours = parseFloat(input.value);
 
   if (isNaN(hours) || hours <= 0) {
     alert("Enter valid hours");
@@ -123,11 +141,19 @@ function addHours(index) {
 
   const skill = skills[index];
 
-  skill.completed += hours;
-
-  if (skill.completed > skill.target) {
-    skill.completed = skill.target;
+  // NEW: Stop adding if already 100%
+  if (skill.completed >= skill.target) {
+    alert("Skill already completed!");
+    return;
   }
+
+  // NEW: Prevent exceeding target
+  if (skill.completed + hours > skill.target) {
+    alert("Progress exceeds target hours!");
+    return;
+  }
+
+  skill.completed += hours;
 
   const now = new Date();
 
@@ -146,9 +172,10 @@ function addHours(index) {
   renderSkills();
 }
 
-
 function deleteSkill(index) {
+
   skills.splice(index, 1);
+
   renderSkills();
 }
 
